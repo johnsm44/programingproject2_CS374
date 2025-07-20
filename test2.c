@@ -12,8 +12,6 @@ typedef struct movie {
     struct movie *next; // Pointer to the next movie in the list
 } movie;
 
-movie* processMovieFile(const char *filename);
-
 // Function to create a new movie node
 movie* createMovieNode(const char* title, int year, const char* languages, float rating) {
     movie* newNode = (movie*)malloc(sizeof(movie));
@@ -343,7 +341,7 @@ int main(int argc, char **argv) {
     }
 
     // processMovieFile now returns the head of the linked list
-    processMovieFile(argv[1]);
+    movie* head = processMovieFile(argv[1]);
     if (head == NULL) {
         fprintf(stderr, "Failed to process movie file.\n");
         return EXIT_FAILURE;
