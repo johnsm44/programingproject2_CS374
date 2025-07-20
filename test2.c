@@ -343,7 +343,7 @@ int main(int argc, char **argv) {
     }
 
     // processMovieFile now returns the head of the linked list
-    movie* head = processMovieFile(argv[1]);
+    processMovieFile(argv[1]);
     if (head == NULL) {
         fprintf(stderr, "Failed to process movie file.\n");
         return EXIT_FAILURE;
