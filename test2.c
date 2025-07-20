@@ -12,6 +12,8 @@ typedef struct movie {
     struct movie *next; // Pointer to the next movie in the list
 } movie;
 
+movie* processMovieFile(const char *filename);
+
 // Function to create a new movie node
 movie* createMovieNode(const char* title, int year, const char* languages, float rating) {
     movie* newNode = (movie*)malloc(sizeof(movie));
