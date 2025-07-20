@@ -4,17 +4,17 @@
 #include <ctype.h>  // For tolower, isdigit
 
 // Define the struct for a movie
-typedef struct Movie {
+typedef struct movie {
     char title[256];
     int year;
     char languages[256]; // Semicolon-separated languages
     float rating;
-    struct Movie *next; // Pointer to the next movie in the list
-} Movie;
+    struct movie *next; // Pointer to the next movie in the list
+} movie;
 
 // Function to create a new movie node
-Movie* createMovieNode(const char* title, int year, const char* languages, float rating) {
-    Movie* newNode = (Movie*)malloc(sizeof(Movie));
+movie* createMovieNode(const char* title, int year, const char* languages, float rating) {
+    movie* newNode = (movie*)malloc(sizeof(movie));
     if (newNode == NULL) {
         perror("Failed to allocate memory for new movie node");
         exit(EXIT_FAILURE);
@@ -45,11 +45,11 @@ Movie* createMovieNode(const char* title, int year, const char* languages, float
 }
 
 // Function to add a movie node to the end of the linked list
-void addMovieToList(Movie** head, Movie* newNode) {
+void addMovieToList(movie** head, movie* newNode) {
     if (*head == NULL) {
         *head = newNode;
     } else {
-        Movie* current = *head;
+        movie* current = *head;
         while (current->next != NULL) {
             current = current->next;
         }
@@ -67,7 +67,7 @@ void printMenu() {
 }
 
 // 1. Show movies released in the specified year
-void showMoviesByYear(Movie* head) {
+void showMoviesByYear(movie* head) {
     int searchYear;
     printf("Enter the year for which you want to see movies: ");
     if (scanf("%d", &searchYear) != 1) {
@@ -76,7 +76,7 @@ void showMoviesByYear(Movie* head) {
         return;
     }
 
-    Movie* current = head;
+    movie* current = head;
     int found = 0;
     while (current != NULL) {
         if (current->year == searchYear) {
@@ -91,7 +91,7 @@ void showMoviesByYear(Movie* head) {
 }
 
 // 2. Show highest rated movie for each year
-void showHighestRatedMoviePerYear(Movie* head) {
+void showHighestRatedMoviePerYear(movie* head) {
     // A temporary linked list to store the highest rated movie for each year
     typedef struct YearRating {
         int year;
@@ -102,7 +102,7 @@ void showHighestRatedMoviePerYear(Movie* head) {
 
     YearRating* yearRatingsHead = NULL;
 
-    Movie* currentMovie = head;
+    movie* currentMovie = head;
     while (currentMovie != NULL) {
         YearRating* currentYearRating = yearRatingsHead;
         int foundYear = 0;
@@ -164,7 +164,7 @@ void showHighestRatedMoviePerYear(Movie* head) {
 
 
 // 3. Show the title and year of release of all movies in a specific language
-void showMoviesByLanguage(Movie* head) {
+void showMoviesByLanguage(movie* head) {
     char searchTerm[256];
     printf("Enter the language for which you want to see movies: ");
     getchar(); // Consume the newline character left by previous input
@@ -176,7 +176,7 @@ void showMoviesByLanguage(Movie* head) {
         searchTerm[i] = tolower(searchTerm[i]);
     }
 
-    Movie* current = head;
+    movie* current = head;
     int found = 0;
     while (current != NULL) {
         // Create a modifiable copy of languages string for tokenization
@@ -214,9 +214,9 @@ void showMoviesByLanguage(Movie* head) {
 }
 
 // Function to free the linked list memory
-void freeMovieList(Movie* head) {
-    Movie* current = head;
-    Movie* next;
+void freeMovieList(movie* head) {
+    movie* current = head;
+    movie* next;
     while (current != NULL) {
         next = current->next;
         free(current);
@@ -237,7 +237,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    Movie* head = NULL;
+    movie* head = NULL;
     // Use char* for getline as it manages memory
     char *currLine = NULL; 
     size_t len = 0; // len will be updated by getline
@@ -349,7 +349,7 @@ int main(int argc, char *argv[]) {
         // Skip the last "Value" column if it exists; atof will stop at non-numeric characters.
         // No explicit strtok needed for the last column if it's always after the rating.
 
-        Movie* newMovie = createMovieNode(title, year, languages, rating);
+        movie* newMovie = createMovieNode(title, year, languages, rating);
         addMovieToList(&head, newMovie);
         movieCount++;
     }
