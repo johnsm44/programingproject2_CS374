@@ -224,51 +224,6 @@ void freeMovieList(movie* head) {
     }
 }
 
-int main(int argc, char **argv) {
-    if (argc < 2) {
-        printf("You must provide the name of the file to process\n");
-        printf("Example usage: ./movies movies.csv\n");
-        return EXIT_FAILURE;
-    }
-
-    // processMovieFile now returns the head of the linked list
-    movie* head = processMovieFile(argv[1]);
-    if (head == NULL) {
-        fprintf(stderr, "Failed to process movie file.\n");
-        return EXIT_FAILURE;
-    }
-
-    printf("Processed file %s and parsed data.\n", argv[1]);
-
-    int choice;
-    do {
-        printMenu();
-        if (scanf("%d", &choice) != 1) {
-            printf("You entered an incorrect choice. Try again.\n");
-            while (getchar() != '\n');
-            continue;
-        }
-
-        switch (choice) {
-            case 1:
-                showMoviesByYear(head);
-                break;
-            case 2:
-                showHighestRatedMoviePerYear(head);
-                break;
-            case 3:
-                showMoviesByLanguage(head);
-                break;
-            case 4:
-                break;
-            default:
-                printf("You entered an incorrect choice. Try again.\n");
-        }
-    } while (choice != 4);
-
-    freeMovieList(head);
-    return EXIT_SUCCESS;
-}
 movie* processMovieFile(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -376,4 +331,50 @@ movie* processMovieFile(const char *filename) {
     printf("Parsed data for %d movies\n", movieCount);
 
     return head;
+}
+
+int main(int argc, char **argv) {
+    if (argc < 2) {
+        printf("You must provide the name of the file to process\n");
+        printf("Example usage: ./movies movies.csv\n");
+        return EXIT_FAILURE;
+    }
+
+    // processMovieFile now returns the head of the linked list
+    movie* head = processMovieFile(argv[1]);
+    if (head == NULL) {
+        fprintf(stderr, "Failed to process movie file.\n");
+        return EXIT_FAILURE;
+    }
+
+    printf("Processed file %s and parsed data.\n", argv[1]);
+
+    int choice;
+    do {
+        printMenu();
+        if (scanf("%d", &choice) != 1) {
+            printf("You entered an incorrect choice. Try again.\n");
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                showMoviesByYear(head);
+                break;
+            case 2:
+                showHighestRatedMoviePerYear(head);
+                break;
+            case 3:
+                showMoviesByLanguage(head);
+                break;
+            case 4:
+                break;
+            default:
+                printf("You entered an incorrect choice. Try again.\n");
+        }
+    } while (choice != 4);
+
+    freeMovieList(head);
+    return EXIT_SUCCESS;
 }
