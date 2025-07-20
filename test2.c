@@ -225,34 +225,72 @@ void freeMovieList(movie* head) {
 }
 
 int main(int argc, char **argv) {
-    if (argc < 2) { // Changed from `argc != 2` to `argc < 2` for flexibility, though `==2` is fine for this problem.
+    if (argc < 2) {
         printf("You must provide the name of the file to process\n");
         printf("Example usage: ./movies movies.csv\n");
         return EXIT_FAILURE;
     }
 
-    FILE *file = fopen(argv[1], "r");
-    if (file == NULL) {
-        perror("Error opening file");
+    // processMovieFile now returns the head of the linked list
+    movie* head = processMovieFile(argv[1]);
+    if (head == NULL) {
+        fprintf(stderr, "Failed to process movie file.\n");
         return EXIT_FAILURE;
     }
 
+    printf("Processed file %s and parsed data.\n", argv[1]);
+
+    int choice;
+    do {
+        printMenu();
+        if (scanf("%d", &choice) != 1) {
+            printf("You entered an incorrect choice. Try again.\n");
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                showMoviesByYear(head);
+                break;
+            case 2:
+                showHighestRatedMoviePerYear(head);
+                break;
+            case 3:
+                showMoviesByLanguage(head);
+                break;
+            case 4:
+                break;
+            default:
+                printf("You entered an incorrect choice. Try again.\n");
+        }
+    } while (choice != 4);
+
+    freeMovieList(head);
+    return EXIT_SUCCESS;
+}
+movie* processMovieFile(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        return NULL;
+    }
+
     movie* head = NULL;
-    char *currLine = NULL; 
+    char *currLine = NULL;
     size_t len = 0;
-    int movieCount = 0;
-    
-    // Read and discard the header line
+
     if (getline(&currLine, &len, file) == -1) {
         fprintf(stderr, "Error reading header or empty file.\n");
         fclose(file);
         free(currLine);
-        return EXIT_FAILURE;
+        return NULL;
     }
-    free(currLine); 
+    free(currLine);
     currLine = NULL;
     len = 0;
 
+    int movieCount = 0;
     while (getline(&currLine, &len, file) != -1) {
         currLine[strcspn(currLine, "\n")] = '\0';
 
@@ -335,51 +373,7 @@ int main(int argc, char **argv) {
     free(currLine);
     fclose(file);
 
-    printf("Processed file %s and parsed data for %d movies\n", argv[1], movieCount);
+    printf("Parsed data for %d movies\n", movieCount);
 
-    int choice;
-    do {
-        printMenu();
-        if (scanf("%d", &choice) != 1) {
-            printf("You entered an incorrect choice. Try again.\n");
-            while (getchar() != '\n'); 
-            continue;
-        }
-
-        switch (choice) {
-            case 1:
-                showMoviesByYear(head);
-                break;
-            case 2:
-                showHighestRatedMoviePerYear(head);
-                break;
-            case 3:
-                showMoviesByLanguage(head);
-                break;
-            case 4:
-                break;
-            default:
-                printf("You entered an incorrect choice. Try again.\n");
-        }
-    } while (choice != 4);
-
-    freeMovieList(head);
-    return EXIT_SUCCESS;
-}
-
-void processMovieFile(char* filePath){
-char *currLine = NULL;
-size_t len = 0;
-// Open the specified file for reading only
-FILE *movieFile = fopen(filePath, "r");
-// Read the file line by line
-while(getline(&currLine, &len, movieFile) != -1)
-{
-printf("%s", currLine);
-}
-// Free the memory allocated by getline for currLine
-free(currLine);
-// Close the file
-fclose(movieFile);
-printf("\nProcessed file %s\n", filePath);
+    return head;
 }
