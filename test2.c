@@ -328,7 +328,7 @@ movie* processMovieFile(const char *filename) {
     free(currLine);
     fclose(file);
 
-    printf("Parsed data for %d movies\n", movieCount);
+    printf("Processed file %s and parsed data for %d movies", filename, movieCount);
 
     return head;
 }
@@ -346,8 +346,6 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Failed to process movie file.\n");
         return EXIT_FAILURE;
     }
-
-    printf("Processed file %s and parsed data.\n", argv[1]);
 
     int choice;
     do {
